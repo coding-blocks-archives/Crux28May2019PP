@@ -9,7 +9,7 @@ import java.util.Scanner;
  *
  */
 
-public class Pattern30 {
+public class Pattern31 {
 
 	public static void main(String[] args) {
 
@@ -26,7 +26,11 @@ public class Pattern30 {
 			int col = 1;
 			while (col <= n) {
 
-				System.out.print(val);
+				if (row + col == n + 1) {
+					System.out.print("*");
+				} else {
+					System.out.print(val);
+				}
 
 				val = val - 1;
 				col = col + 1;

@@ -1,40 +1,40 @@
-package L2_May29;
+package Assignments.June1;
 
 import java.util.Scanner;
 
 /**
  * @author Garima Chhikara
  * @email garima.chhikara@codingblocks.com
- * @date 29-May-2019
+ * @date 01-Jun-2019
  *
  */
 
-public class Pattern30 {
+public class Pattern8 {
 
 	public static void main(String[] args) {
 
 		Scanner scn = new Scanner(System.in);
 
-		int n = 5;
+		int n = scn.nextInt();
 
 		int row = 1;
 
 		while (row <= n) {
 
-			int val = n;
-
+			// work
 			int col = 1;
 			while (col <= n) {
 
-				System.out.print(val);
-
-				val = val - 1;
-				col = col + 1;
+				if (row == col || row + col == n + 1)
+					System.out.print("*");
+				else
+					System.out.print(" ");
+				col++;
 			}
 
+			// prep
 			System.out.println();
-			row = row + 1;
-
+			row++;
 		}
 
 	}
