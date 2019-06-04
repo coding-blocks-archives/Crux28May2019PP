@@ -16,7 +16,7 @@ public class ArrayOps {
 	public static void main(String[] args) {
 
 		// int[] array = takeInput();
-		int[] array = { 10, 20, 30, 40 };
+		int[] array = { 10, 20, 30 };
 
 		// display(array);
 
@@ -31,9 +31,11 @@ public class ArrayOps {
 		// bubbleSort(array);
 		// selectionSort(array);
 		// insertionSort(array);
-		subArrays(array);
+		// subArrays(array);
 
-//		display(array);
+		subsets(array);
+
+		// display(array);
 	}
 
 	public static int[] takeInput() {
@@ -246,6 +248,25 @@ public class ArrayOps {
 	}
 
 	public static void subsets(int[] arr) {
+
+		int limit = (int) (Math.pow(2, arr.length));
+
+		for (int num = 0; num < limit; num++) {
+
+			int temp = num;
+			for (int i = 0; i < arr.length; i++) {
+
+				int rem = temp % 2;
+				temp = temp / 2;
+
+				if (rem > 0) {
+					System.out.print(arr[i] + " ");
+				}
+
+			}
+
+			System.out.println();
+		}
 
 	}
 
