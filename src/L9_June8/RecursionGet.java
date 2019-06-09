@@ -20,7 +20,13 @@ public class RecursionGet {
 
 		// System.out.println(getCoinToss(3));
 
-		System.out.println(lowerUpperCase("1Z4c"));
+		// System.out.println(lowerUpperCase("1Z4c"));
+
+		// System.out.println(boardPath(0, 10));
+
+		// System.out.println(mazePath(0, 0, 2, 2));
+		// System.out.println(mazePathD(0, 0, 2, 2));
+		System.out.println(mazePathDMM(0, 0, 2, 2));
 
 	}
 
@@ -182,6 +188,139 @@ public class RecursionGet {
 
 		}
 
+		return mr;
+
+	}
+
+	public static ArrayList<String> boardPath(int curr, int end) {
+
+		// +ve base case
+		if (curr == end) {
+			ArrayList<String> br = new ArrayList<>();
+			br.add("\n");
+			return br;
+		}
+
+		// -ve base case
+		if (curr >= end) {
+			ArrayList<String> br = new ArrayList<>();
+			return br;
+		}
+
+		ArrayList<String> mr = new ArrayList<>();
+
+		for (int dice = 1; dice <= 6; dice++) {
+
+			ArrayList<String> rr = boardPath(curr + dice, end);
+
+			for (String val : rr) {
+				mr.add(dice + val);
+			}
+		}
+
+		return mr;
+
+	}
+
+	public static ArrayList<String> mazePath(int cr, int cc, int er, int ec) {
+
+		if (cr == er && cc == ec) {
+			ArrayList<String> br = new ArrayList<>();
+			br.add("");
+			return br;
+		}
+
+		if (cr > er || cc > ec) {
+			ArrayList<String> br = new ArrayList<>();
+			return br;
+		}
+
+		ArrayList<String> mr = new ArrayList<>();
+
+		ArrayList<String> rrh = mazePath(cr, cc + 1, er, ec);
+		for (String val : rrh) {
+			mr.add("H" + val);
+		}
+
+		ArrayList<String> rrv = mazePath(cr + 1, cc, er, ec);
+		for (String val : rrv) {
+			mr.add("V" + val);
+		}
+
+		return mr;
+
+	}
+
+	public static ArrayList<String> mazePathD(int cr, int cc, int er, int ec) {
+
+		if (cr == er && cc == ec) {
+			ArrayList<String> br = new ArrayList<>();
+			br.add("");
+			return br;
+		}
+
+		if (cr > er || cc > ec) {
+			ArrayList<String> br = new ArrayList<>();
+			return br;
+		}
+
+		ArrayList<String> mr = new ArrayList<>();
+
+		ArrayList<String> rrh = mazePathD(cr, cc + 1, er, ec);
+		for (String val : rrh) {
+			mr.add("H" + val);
+		}
+
+		ArrayList<String> rrv = mazePathD(cr + 1, cc, er, ec);
+		for (String val : rrv) {
+			mr.add("V" + val);
+		}
+
+		ArrayList<String> rrd = mazePathD(cr + 1, cc + 1, er, ec);
+		for (String val : rrd) {
+			mr.add("D" + val);
+		}
+
+		return mr;
+
+	}
+
+	public static ArrayList<String> mazePathDMM(int cr, int cc, int er, int ec) {
+
+		if (cr == er && cc == ec) {
+			ArrayList<String> br = new ArrayList<>();
+			br.add("\n");
+			return br;
+		}
+
+		if (cr > er || cc > ec) {
+			ArrayList<String> br = new ArrayList<>();
+			return br;
+		}
+
+		ArrayList<String> mr = new ArrayList<>();
+
+		for (int step = 1; step <= ec; step++) {
+			ArrayList<String> rrh = mazePathDMM(cr, cc + step, er, ec);
+			for (String val : rrh) {
+				mr.add("H" + step + val);
+			}
+		}
+
+		for (int step = 1; step <= er; step++) {
+			ArrayList<String> rrv = mazePathDMM(cr + step, cc, er, ec);
+			for (String val : rrv) {
+				mr.add("V" + step + val);
+			}
+		}
+
+		for (int step = 1; step <= ec && step <= er; step++) {
+			ArrayList<String> rrd = mazePathDMM(cr + step, cc + step, er, ec);
+			for (String val : rrd) {
+				mr.add("D" + step + val);
+			}
+
+		}
 		return mr;
 
 	}
