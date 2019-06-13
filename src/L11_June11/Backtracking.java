@@ -17,7 +17,7 @@ public class Backtracking {
 		// QueenCombination(new boolean[4], 3, 0, "", -1);
 
 		// int[] denom = { 2, 3, 5, 6 };
-		// coinChange(denom, 10, "", 0);
+		// CoinChange(denom, 10, "", 0);
 
 		// QueenCombinationBoxRespect(new boolean[4], 0, 2, 0, "");
 
@@ -64,7 +64,7 @@ public class Backtracking {
 
 	}
 
-	public static void coinChange(int[] denom, int amount, String ans, int lastCoinUsedIndex) {
+	public static void CoinChange(int[] denom, int amount, String ans, int lastCoinUsedIndex) {
 
 		if (amount == 0) {
 			System.out.println(ans);
@@ -74,7 +74,7 @@ public class Backtracking {
 		for (int i = lastCoinUsedIndex; i < denom.length; i++) {
 
 			if (amount >= denom[i])
-				coinChange(denom, amount - denom[i], ans + denom[i], i);
+				CoinChange(denom, amount - denom[i], ans + denom[i], i);
 
 		}
 
@@ -207,7 +207,7 @@ public class Backtracking {
 		// R
 		blockedMaze(maze, row, col + 1, ans + "R", visited);
 
-		visited[row][col] = false;
+		visited[row][col] = false; // backtracking
 
 	}
 
