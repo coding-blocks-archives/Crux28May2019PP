@@ -23,9 +23,11 @@ public class Backtracking {
 
 		// QueenCombination2D(new boolean[4][4], 0, 0, 4, 0, "");
 
-		int[][] maze = { { 0, 1, 0, 0, }, { 0, 0, 0, 0 }, { 0, 1, 0, 0 }, { 0, 0, 1, 0 } };
-		blockedMaze(maze, 0, 0, "", new boolean[maze.length][maze[0].length]);
+		// int[][] maze = { { 0, 1, 0, 0, }, { 0, 0, 0, 0 }, { 0, 1, 0, 0 }, { 0, 0, 1,
+		// 0 } };
+		// blockedMaze(maze, 0, 0, "", new boolean[maze.length][maze[0].length]);
 
+		KQueen(new boolean[4][4], 0, "", 0, 4);
 	}
 
 	public static void QueenPermutation(boolean[] board, int tq, int qpsf, String ans) {
@@ -209,6 +211,47 @@ public class Backtracking {
 
 		visited[row][col] = false; // backtracking
 
+	}
+
+	public static void NQueen(boolean[][] board, int row, String ans) {
+
+		if (row == board.length) {
+			System.out.println(ans);
+			return;
+		}
+
+		for (int col = 0; col < board.length; col++) {
+
+			if (isItSafeToPlaceQueen(board, row, col)) {
+				board[row][col] = true;
+				NQueen(board, row + 1, ans + "[" + row + "-" + col + "]");
+				board[row][col] = false;
+			}
+		}
+
+	}
+
+	public static void KQueen(boolean[][] board, int row, String ans, int qpsf, int tq) {
+
+		if (qpsf == tq) {
+			System.out.println(ans);
+			return;
+		}
+
+		if (row == board.length) {
+			return;
+		}
+
+		for (int col = 0; col < board.length; col++) {
+
+			if (isItSafeToPlaceQueen(board, row, col)) {
+				board[row][col] = true;
+				KQueen(board, row + 1, ans + "[" + row + "-" + col + "]", qpsf + 1, tq);
+				board[row][col] = false;
+			}
+		}
+
+		KQueen(board, row + 1, ans, qpsf, tq);
 	}
 
 }

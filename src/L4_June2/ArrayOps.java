@@ -16,7 +16,7 @@ public class ArrayOps {
 	public static void main(String[] args) {
 
 		// int[] array = takeInput();
-		int[] array = { 10, 20, 30 };
+		// int[] array = { 10, 20, 30 };
 
 		// display(array);
 
@@ -28,12 +28,25 @@ public class ArrayOps {
 		// int[] ans = inverse(array);
 		// int[] ans = rotate(array, 4);
 
+		int[] arr = new int[100000];
+		for (int i = 0; i < arr.length; i++) {
+			arr[i] = i ;
+		}
+
+		long start = System.currentTimeMillis();
+
+		bubbleSort(arr);
+
+		long end = System.currentTimeMillis();
+
+		System.out.println(end - start);
+		
 		// bubbleSort(array);
 		// selectionSort(array);
 		// insertionSort(array);
 		// subArrays(array);
 
-		subsets(array);
+		// subsets(array);
 
 		// display(array);
 	}
@@ -171,17 +184,25 @@ public class ArrayOps {
 
 		int n = arr.length;
 
+		boolean flag = true;
+
 		for (int counter = 0; counter <= n - 2; counter++) {
 
 			for (int j = 0; j <= n - counter - 2; j++) {
 
 				if (arr[j] > arr[j + 1]) {
+
+					flag = false;
+
 					int temp = arr[j];
 					arr[j] = arr[j + 1];
 					arr[j + 1] = temp;
 				}
 
 			}
+
+			if (flag)
+				break;
 
 		}
 
