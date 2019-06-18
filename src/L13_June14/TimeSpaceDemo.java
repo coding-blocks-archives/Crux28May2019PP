@@ -1,5 +1,7 @@
 package L13_June14;
 
+import java.util.Arrays;
+
 /**
  * @author Garima Chhikara
  * @email garima.chhikara@codingblocks.com
@@ -12,7 +14,9 @@ public class TimeSpaceDemo {
 	public static void main(String[] args) {
 
 		// System.out.println(polynomial(3, 5));
-		System.out.println(palindromicCount("nitinn"));
+		// System.out.println(palindromicCount("nitinn"));
+		// SOE(100);
+		System.out.println(power(3, 4));
 	}
 
 	public static int polynomial(int x, int n) {
@@ -67,4 +71,72 @@ public class TimeSpaceDemo {
 
 	}
 
+	public static void SOE(int n) {
+
+		boolean[] primes = new boolean[n + 1];
+
+		Arrays.fill(primes, true);
+
+		primes[0] = false;
+		primes[1] = false;
+
+		for (int table = 2; table * table <= n; table++) {
+
+			if (primes[table] == false) {
+				continue;
+			}
+
+			for (int multiplier = 2; table * multiplier <= n; multiplier++) {
+				primes[table * multiplier] = false;
+			}
+		}
+
+		for (int i = 0; i < primes.length; i++) {
+
+			if (primes[i])
+				System.out.println(i);
+		}
+
+	}
+
+	public static int power(int x, int n) {
+
+		if (n == 0) {
+			return 1;
+		}
+
+		int rr = power(x, n / 2);
+		if (n % 2 == 0) {
+			return rr * rr;
+		} else {
+			return rr * rr * x;
+		}
+
+	}
+
+	public static int[] mergeTwoSortedArrays() {
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
+
+
+
+
