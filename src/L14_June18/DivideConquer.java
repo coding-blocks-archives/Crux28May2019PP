@@ -13,15 +13,21 @@ public class DivideConquer {
 
 	public static void main(String[] args) {
 
-		int[] arr = { 4, 2, 3, 1, 5 };
+		int[] arr = { -2, 1, -3, 4, -1, 2, 100, -5, 4 };
 
 		// int[] ans = mergeSort(arr, 0, arr.length - 1);
-		quickSort(arr, 0, arr.length - 1);
+		// quickSort(arr, 0, arr.length - 1);
 
-		for (int val : arr) {
-			System.out.print(val + " ");
-		}
+		// for (int val : arr) {
+		// System.out.print(val + " ");
+		// }
 		// System.out.println(count);
+
+		int[] ans = maxSubArraySum(arr, 0, arr.length - 1);
+		System.out.println(ans[0]);
+		System.out.println(ans[1]);
+		System.out.println(ans[2]);
+	
 	}
 
 	public static int[] mergeTwoSortedArrays(int[] one, int[] two) {
@@ -127,4 +133,140 @@ public class DivideConquer {
 		quickSort(arr, left, hi);
 
 	}
+
+	public static int[] maxSubArraySum(int[] arr, int lo, int hi) {
+
+		if (lo == hi) {
+			int[] br = new int[3];
+
+			br[0] = lo;
+			br[1] = hi;
+			br[2] = arr[lo];
+
+			return br;
+		}
+
+		int mid = (lo + hi) / 2;
+
+		int[] fh = maxSubArraySum(arr, lo, mid);
+		int[] sh = maxSubArraySum(arr, mid + 1, hi);
+
+		int partition = maxSumLeftPart(arr, lo, mid) + maxSumRightPart(arr, mid + 1, hi);
+
+		int[] ans = new int[3];
+
+		if (partition > fh[2] && partition > sh[2]) {
+
+			ans[0] = maxSumLeftIndex(arr, lo, mid);
+			ans[1] = maxSumRightIndex(arr, mid + 1, hi);
+
+		} else if (fh[2] > partition && fh[2] > sh[2]) {
+			ans[0] = fh[0];
+			ans[1] = fh[1];
+
+		} else if (sh[2] > partition && sh[2] > fh[2]) {
+
+			ans[0] = sh[0];
+			ans[1] = sh[1];
+		}
+
+		ans[2] = Math.max(partition, Math.max(fh[2], sh[2]));
+
+		return ans;
+
+	}
+
+	public static int maxSumLeftIndex(int[] arr, int lo, int hi) {
+		int max = Integer.MIN_VALUE;
+
+		int index = 0;
+		int sum = 0;
+
+		for (int i = hi; i >= lo; i--) {
+			sum += arr[i];
+
+			if (sum > max) {
+				max = sum;
+				index = i;
+			}
+
+		}
+
+		return index;
+	}
+
+	public static int maxSumRightIndex(int[] arr, int lo, int hi) {
+		int max = Integer.MIN_VALUE;
+
+		int index = 0;
+		int sum = 0;
+
+		for (int i = lo; i <= hi; i++) {
+			sum += arr[i];
+
+			if (sum > max) {
+				max = sum;
+				index = i;
+			}
+
+		}
+
+		return index;
+	}
+
+	public static int maxSumLeftPart(int[] arr, int lo, int hi) {
+		int max = Integer.MIN_VALUE;
+
+		int sum = 0;
+
+		for (int i = hi; i >= lo; i--) {
+			sum += arr[i];
+
+			if (sum > max) {
+				max = sum;
+			}
+
+		}
+
+		return max;
+	}
+
+	public static int maxSumRightPart(int[] arr, int lo, int hi) {
+		int max = Integer.MIN_VALUE;
+
+		int sum = 0;
+
+		for (int i = lo; i <= hi; i++) {
+			sum += arr[i];
+
+			if (sum > max) {
+				max = sum;
+			}
+
+		}
+
+		return max;
+	}
+
+	public static boolean search2D(int[][] arr, int target) {
+
+		int row = 0;
+		int col = arr[0].length - 1;
+
+		while (row < arr.length && col >= 0) {
+
+			if (arr[row][col] > target) {
+				col--;
+			} else if (arr[row][col] < target) {
+				row++;
+			} else {
+				return true;
+			}
+
+		}
+
+		return false;
+
+	}
+
 }

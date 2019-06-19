@@ -26,7 +26,9 @@ public class RecursionGet {
 
 		// System.out.println(mazePath(0, 0, 2, 2));
 		// System.out.println(mazePathD(0, 0, 2, 2));
-		System.out.println(mazePathDMM(0, 0, 2, 2));
+		// System.out.println(mazePathDMM(0, 0, 2, 2));
+
+		System.out.println(parenthesis("2*3-4*5"));
 
 	}
 
@@ -321,6 +323,46 @@ public class RecursionGet {
 			}
 
 		}
+		return mr;
+
+	}
+
+	public static ArrayList<Integer> parenthesis(String str) {
+
+		ArrayList<Integer> mr = new ArrayList<>();
+
+		for (int i = 0; i < str.length(); i++) {
+
+			if (str.charAt(i) == '+' || str.charAt(i) == '*' || str.charAt(i) == '-') {
+
+				String fh = str.substring(0, i);
+				String sh = str.substring(i + 1);
+
+				ArrayList<Integer> rrfh = parenthesis(fh);
+				ArrayList<Integer> rrsh = parenthesis(sh);
+
+				// my result
+				for (int val1 : rrfh) {
+					for (int val2 : rrsh) {
+
+						if (str.charAt(i) == '+') {
+							mr.add(val1 + val2);
+						} else if (str.charAt(i) == '-') {
+							mr.add(val1 - val2);
+						} else if (str.charAt(i) == '*') {
+							mr.add(val1 * val2);
+						}
+					}
+				}
+
+			}
+
+		}
+
+		if (mr.size() == 0) {
+			mr.add(Integer.parseInt(str));
+		}
+
 		return mr;
 
 	}
