@@ -9,9 +9,9 @@ package L16_June20;
 
 public class Queue {
 
-	private int[] data;
-	private int size;
-	private int front;
+	protected int[] data;
+	protected int size;
+	protected int front;
 
 	public Queue() {
 		data = new int[5];
