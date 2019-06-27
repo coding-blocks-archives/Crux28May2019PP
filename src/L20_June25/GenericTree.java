@@ -277,9 +277,130 @@ public class GenericTree {
 			}
 
 		}
-		
+
 		System.out.println();
 
 	}
 
+	public void printAtLevel(int level) {
+		printAtLevel(root, level, 0);
+	}
+
+	private void printAtLevel(Node node, int level, int count) {
+
+		if (count == level) {
+			System.out.println(node.data);
+			return;
+		}
+
+		for (Node child : node.children) {
+			printAtLevel(child, level, count + 1);
+		}
+
+	}
+
+	public void levelOrderLW() {
+
+		LinkedList<Node> queue = new LinkedList<>();
+
+		queue.addLast(root);
+		queue.addLast(null);
+
+		while (!queue.isEmpty()) {
+
+			Node rn = queue.removeFirst();
+
+			if (rn == null) {
+				System.out.println();
+
+				if (queue.isEmpty())
+					break;
+
+				queue.addLast(null);
+				continue;
+			}
+
+			System.out.print(rn.data + " ");
+
+			for (Node child : rn.children) {
+				queue.addLast(child);
+			}
+
+		}
+
+		System.out.println();
+
+	}
+
+	public void levelOrderLW2() {
+
+		LinkedList<Node> primary = new LinkedList<>();
+		LinkedList<Node> helper = new LinkedList<>();
+		primary.addLast(root);
+
+		while (!primary.isEmpty()) {
+
+			Node rn = primary.removeFirst();
+
+			System.out.print(rn.data + " ");
+
+			for (Node child : rn.children) {
+				helper.addLast(child);
+			}
+
+			if (primary.isEmpty()) {
+				System.out.println();
+				primary = helper;
+				helper = new LinkedList<>();
+			}
+
+		}
+
+	}
+
+	public void levelOrderZigZag() {
+
+		LinkedList<Node> primaryS = new LinkedList<>();
+		LinkedList<Node> helperS = new LinkedList<>();
+
+		int count = 0;
+
+		primaryS.addFirst(root);
+
+		while (!primaryS.isEmpty()) {
+
+			Node rn = primaryS.removeFirst();
+
+			System.out.print(rn.data + " ");
+
+			if (count % 2 == 0) {
+
+				for (Node child : rn.children) {
+					helperS.addFirst(child);
+				}
+
+			} else {
+
+				for (int i = rn.children.size() - 1; i >= 0; i--) {
+					helperS.addFirst(rn.children.get(i));
+				}
+
+			}
+
+			if (primaryS.isEmpty()) {
+
+				System.out.println();
+				count++;
+				primaryS = helperS;
+				helperS = new LinkedList<>();
+			}
+
+		}
+
+	}
+
 }
+
+
+
+
