@@ -1,6 +1,7 @@
 package L22_June27;
 
 import java.util.Scanner;
+import java.util.Stack;
 
 /**
  * @author Garima Chhikara
@@ -59,6 +60,37 @@ public class BinaryTree {
 		}
 
 		return nn;
+	}
+
+	public BinaryTree(int[] pre, int[] in) {
+		root = construct(pre, 0, pre.length - 1, in, 0, in.length - 1);
+	}
+
+	private Node construct(int[] pre, int plo, int phi, int[] in, int ilo, int ihi) {
+
+		if(plo > phi || ilo > ihi) {
+			return null ;			
+		}
+		
+		Node nn = new Node();
+		nn.data = pre[plo];
+
+		// search for pre[plo]
+		int si = -1;
+		for (int i = ilo; i <= ihi; i++) {
+			if (in[i] == pre[plo]) {
+				si = i;
+				break;
+			}
+		}
+
+		int nel = si - ilo;
+
+		nn.left = construct(pre, plo + 1, plo + nel, in, ilo, si - 1);
+		nn.right = construct(pre, plo + nel + 1, phi, in, si + 1, ihi);
+
+		return nn;
+
 	}
 
 	public void display() {
@@ -180,6 +212,206 @@ public class BinaryTree {
 
 		return Math.max(np, Math.max(ld, rd));
 
+	}
+
+	private class DiaPair {
+		int diameter = 0;
+		int ht = -1;
+
+		@Override
+		public String toString() {
+			return "Dia: " + diameter + " Ht:" + ht;
+		}
+	}
+
+	public DiaPair diameter2() {
+		return diameter2(root);
+	}
+
+	private DiaPair diameter2(Node node) {
+
+		if (node == null) {
+			return new DiaPair();
+		}
+
+		DiaPair ldp = diameter2(node.left);
+		DiaPair rdp = diameter2(node.right);
+
+		DiaPair sdp = new DiaPair();
+
+		int ld = ldp.diameter;
+		int rd = rdp.diameter;
+
+		int np = ldp.ht + rdp.ht + 2;
+
+		sdp.diameter = Math.max(np, Math.max(ld, rd));
+		sdp.ht = Math.max(ldp.ht, rdp.ht) + 1;
+
+		return sdp;
+
+	}
+
+	public boolean isBalanced() {
+		return isBalanced(root);
+	}
+
+	private boolean isBalanced(Node node) {
+
+		if (node == null)
+			return true;
+
+		boolean lb = isBalanced(node.left);
+		boolean rb = isBalanced(node.right);
+
+		int bf = ht(node.left) - ht(node.right);
+
+		if ((bf == -1 || bf == 0 || bf == 1) && lb && rb) {
+			return true;
+		}
+
+		return false;
+	}
+
+	private class BalPair {
+		boolean isBal = true;
+		int ht = -1;
+	}
+
+	public boolean isBalanced2() {
+		return isBalanced2(root).isBal;
+	}
+
+	private BalPair isBalanced2(Node node) {
+
+		if (node == null)
+			return new BalPair();
+
+		BalPair lbp = isBalanced2(node.left);
+		BalPair rbp = isBalanced2(node.right);
+
+		BalPair sbp = new BalPair();
+
+		int bf = lbp.ht - rbp.ht;
+
+		if ((bf == -1 || bf == 0 || bf == 1) && lbp.isBal && rbp.isBal) {
+			sbp.isBal = true;
+		} else {
+			sbp.isBal = false;
+		}
+
+		sbp.ht = Math.max(lbp.ht, rbp.ht) + 1;
+
+		return sbp;
+	}
+
+	// NLR : preorder
+	// LNR : inorder
+	// LRN : postorder
+	// RNL : rev inorder
+	// RLN : rev preorder
+	// NRL : rev postorder
+	public void preorder() {
+		preorder(root);
+		System.out.println();
+	}
+
+	private void preorder(Node node) {
+
+		if (node == null)
+			return;
+
+		System.out.print(node.data + " ");
+		preorder(node.left);
+		preorder(node.right);
+
+	}
+
+	private class Pair {
+		Node node;
+		boolean sd;
+		boolean ld;
+		boolean rd;
+	}
+
+	public void preorderI() {
+
+		// create a new stack
+		Stack<Pair> stack = new Stack<>();
+
+		// put the root pair
+		Pair sp = new Pair();
+		sp.node = root;
+
+		stack.add(sp);
+
+		while (!stack.isEmpty()) {
+
+			Pair tp = stack.peek();
+
+			// self
+			if (tp.sd == false) {
+				tp.sd = true;
+				System.out.print(tp.node.data + " ");
+			} else if (tp.ld == false) { // left
+
+				Pair np = new Pair();
+				np.node = tp.node.left;
+
+				if (np.node != null)
+					stack.add(np);
+
+				tp.ld = true;
+
+			} else if (tp.rd == false) { // right
+
+				Pair np = new Pair();
+				np.node = tp.node.right;
+
+				if (np.node != null)
+					stack.add(np);
+				tp.rd = true;
+
+			} else { // remove
+				stack.pop();
+			}
+
+		}
+
+		System.out.println();
+	}
+
+	private class DepthPair {
+		int ht = -1;
+		Node temp;
+
+	}
+
+	public void deepestDepth() {
+		deepestDepth(root);
+	}
+
+	private DepthPair deepestDepth(Node node) {
+
+		if (node == null) {
+			return new DepthPair();
+		}
+
+		DepthPair ldp = deepestDepth(node.left);
+		DepthPair rdp = deepestDepth(node.right);
+
+		DepthPair sdp = new DepthPair();
+
+		if (ldp.ht > rdp.ht) {
+			sdp.temp = ldp.temp;
+		} else if (rdp.ht > ldp.ht) {
+			sdp.temp = rdp.temp;
+		} else {
+			sdp.temp = node;
+		}
+
+		sdp.ht = Math.max(ldp.ht, rdp.ht) + 1;
+
+		return sdp;
 	}
 
 }
