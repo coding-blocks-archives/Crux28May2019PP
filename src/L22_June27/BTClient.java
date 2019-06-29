@@ -16,12 +16,23 @@ public class BTClient {
 	// 80 false true 90 false false true 30 false false
 	public static void main(String[] args) {
 
-		int[] pre = { 10, 20, 50, 30, 80, 60, 70 };
-		int[] in = { 20, 50, 10, 80, 30, 70, 60 };
-		
+		// int[] pre = { 1, 2, 4, 5, 7, 8, 3, 6 };
+		// int[] in = { 4, 2, 7, 5, 8, 1, 6, 3 };
+
+		// int[] pre = { -10, 9, 20, 15, 7, 8, 9 };
+		// int[] in = { 9, -10, 15, 20, 8, 7, 9 };
+
+		int[] pre = { 2, -5, -7, 6, 8, 10 };
+		int[] in = { 2, -7, -5, 8, 6, 10 };
 		BinaryTree bt = new BinaryTree(pre, in);
 		bt.display();
-		
+
+		int[] pre1 = { 1, 3, 6, 2, 4, 5, 8, 7 };
+		int[] in1 = { 3, 6, 1, 4, 2, 8, 5, 7 };
+
+		// BinaryTree bt1 = new BinaryTree(pre1, in1);
+		// bt1.display();
+
 		// System.out.println(bt.max());
 		// System.out.println(bt.ht());
 		// System.out.println(bt.find(70));
@@ -31,7 +42,13 @@ public class BTClient {
 		// System.out.println(bt.isBalanced());
 		// System.out.println(bt.isBalanced2());
 
-		bt.preorder();
-		bt.preorderI();
+		// bt.preorder();
+		// bt.preorderI();
+
+		// System.out.println(bt.flipEquivalent(bt1));
+
+		// System.out.println(bt.maxSumPath());
+		System.out.println(bt.largestSubtreeSum());
+
 	}
 }

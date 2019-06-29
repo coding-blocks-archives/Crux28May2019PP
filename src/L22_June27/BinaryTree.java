@@ -68,15 +68,15 @@ public class BinaryTree {
 
 	private Node construct(int[] pre, int plo, int phi, int[] in, int ilo, int ihi) {
 
-		if(plo > phi || ilo > ihi) {
-			return null ;			
+		if (plo > phi || ilo > ihi) {
+			return null;
 		}
-		
+
 		Node nn = new Node();
 		nn.data = pre[plo];
 
 		// search for pre[plo]
-		int si = -1;
+		int si = 0;
 		for (int i = ilo; i <= ihi; i++) {
 			if (in[i] == pre[plo]) {
 				si = i;
@@ -196,6 +196,8 @@ public class BinaryTree {
 
 	}
 
+	// Ques : https://leetcode.com/problems/diameter-of-binary-tree/
+	
 	public int diameter() {
 		return diameter(root);
 	}
@@ -342,7 +344,7 @@ public class BinaryTree {
 		Pair sp = new Pair();
 		sp.node = root;
 
-		stack.add(sp);
+		stack.push(sp);
 
 		while (!stack.isEmpty()) {
 
@@ -380,14 +382,16 @@ public class BinaryTree {
 		System.out.println();
 	}
 
+	// Ques : https://leetcode.com/problems/smallest-subtree-with-all-the-deepest-nodes/
+
 	private class DepthPair {
 		int ht = -1;
 		Node temp;
 
 	}
 
-	public void deepestDepth() {
-		deepestDepth(root);
+	public Node deepestDepth() {
+		return deepestDepth(root).temp;
 	}
 
 	private DepthPair deepestDepth(Node node) {
@@ -414,4 +418,88 @@ public class BinaryTree {
 		return sdp;
 	}
 
+	// Ques : https://leetcode.com/problems/flip-equivalent-binary-trees/
+
+	public boolean flipEquivalent(BinaryTree other) {
+		return flipEquivalent(this.root, other.root);
+	}
+
+	private boolean flipEquivalent(Node node1, Node node2) {
+
+		if (node1 == null && node2 == null)
+			return true;
+
+		if (node1 == null || node2 == null)
+			return false;
+
+		if (node1.data != node2.data) {
+			return false;
+		}
+
+		boolean r1 = flipEquivalent(node1.left, node2.left);
+		boolean r2 = flipEquivalent(node1.right, node2.right);
+
+		boolean r3 = flipEquivalent(node1.left, node2.right);
+		boolean r4 = flipEquivalent(node1.right, node2.left);
+
+		return (r1 && r2) || (r3 && r4);
+
+	}
+
+	// Ques : https://leetcode.com/problems/binary-tree-maximum-path-sum/
+
+	public int maxSumPath() {
+		int[] ans = new int[1];
+
+		maxSumPath(root, ans);
+
+		return ans[0];
+	}
+
+	private int maxSumPath(Node node, int[] ans) {
+
+		if (node == null) {
+			return 0;
+		}
+
+		int leftBranchSum = Math.max(0, maxSumPath(node.left, ans));
+		int rightBranchSum = Math.max(0, maxSumPath(node.right, ans));
+
+		int sp = leftBranchSum + rightBranchSum + node.data;
+
+		if (sp > ans[0]) {	
+			ans[0] = sp;
+		}
+
+		return Math.max(leftBranchSum, rightBranchSum) + node.data;
+	}
+
+	// Ques : https://www.geeksforgeeks.org/find-largest-subtree-sum-tree/
+	
+	public int largestSubtreeSum() {
+
+		int[] ans = new int[1];
+		largestSubtreeSum(root, ans);
+
+		return ans[0];
+	}
+
+	private int largestSubtreeSum(Node node, int[] ans) {
+
+		if (node == null) {
+			return 0;
+		}
+
+		int totalLeftSum = largestSubtreeSum(node.left, ans);
+		int totalRightSum = largestSubtreeSum(node.right, ans);
+
+		int sp = totalLeftSum + totalRightSum + node.data;
+
+		if (sp > ans[0]) {
+			ans[0] = sp;
+		}
+
+		return sp;
+
+	}
 }

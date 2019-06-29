@@ -114,29 +114,4 @@ public class TimeSpaceDemo {
 
 	}
 
-	public static int[] mergeTwoSortedArrays() {
-		
-		
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }
-
-
-
-
