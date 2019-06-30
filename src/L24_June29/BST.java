@@ -165,7 +165,7 @@ public class BST {
 	}
 
 	// Ques : https://leetcode.com/problems/binary-search-tree-to-greater-sum-tree/
-	
+
 	public void replaceWithSumLarger() {
 
 		int[] sum = new int[1];
@@ -201,6 +201,150 @@ public class BST {
 
 		return replaceWithSumLarger2(node.left, sumOfLargerValues + temp);
 
+	}
+
+	public void add(int item) {
+		add(root, item);
+	}
+
+	private void add(Node node, int item) {
+
+		if (item <= node.data) {
+
+			if (node.left == null) {
+
+				Node nn = new Node();
+				nn.data = item;
+				node.left = nn;
+
+			} else {
+				add(node.left, item);
+			}
+
+		} else {
+
+			if (node.right == null) {
+
+				Node nn = new Node();
+				nn.data = item;
+				node.right = nn;
+
+			} else {
+				add(node.right, item);
+			}
+
+		}
+
+	}
+
+	public void addReturn(int item) {
+		root = addReturn(root, item);
+	}
+
+	private Node addReturn(Node node, int item) {
+
+		if (node == null) {
+			Node nn = new Node();
+			nn.data = item;
+			return nn;
+		}
+
+		if (item <= node.data) {
+			node.left = addReturn(node.left, item);
+		} else {
+			node.right = addReturn(node.right, item);
+		}
+
+		return node;
+
+	}
+
+	public void remove(int item) {
+		// remove(null, root, item);
+
+		root = removeReturn(root, item);
+
+	}
+
+	private void remove(Node parent, Node node, int item) {
+
+		if (node == null) {
+			return;
+		}
+
+		if (item < node.data) {
+			remove(node, node.left, item);
+		} else if (item > node.data) {
+			remove(node, node.right, item);
+		} else {
+
+			if (node.left == null && node.right == null) {
+
+				if (node.data <= parent.data) {
+					parent.left = null;
+				} else {
+					parent.right = null;
+				}
+			}
+
+			else if (node.left == null && node.right != null) {
+
+				if (node.data <= parent.data) {
+					parent.left = node.right;
+				} else {
+					parent.right = node.right;
+				}
+
+			}
+
+			else if (node.left != null && node.right == null) {
+
+				if (node.data <= parent.data) {
+					parent.left = node.left;
+				} else {
+					parent.right = node.left;
+				}
+
+			}
+
+			else {
+
+				int temp = max(node.left);
+				remove(node, node.left, temp);
+				node.data = temp;
+
+			}
+
+		}
+	}
+
+	private Node removeReturn(Node node, int item) {
+
+		if (node == null) {
+			return null;
+		}
+
+		if (item < node.data) {
+			node.left = removeReturn(node.left, item);
+		} else if (item > node.data) {
+			node.right = removeReturn(node.right, item);
+		} else {
+
+			if (node.left == null) {
+				return node.right;
+			} else if (node.right == null) {
+				return node.left;
+			} else {
+
+				int temp = max(node.left);
+				node.left = removeReturn(node.left, temp);
+				node.data = temp;
+
+			}
+
+		}
+
+		return node;
 	}
 
 }

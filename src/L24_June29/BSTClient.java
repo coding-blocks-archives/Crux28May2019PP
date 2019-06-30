@@ -16,8 +16,18 @@ public class BSTClient {
 
 		bst.display();
 		// bst.printInRange(15, 65);
-		bst.replaceWithSumLarger();
+		// bst.replaceWithSumLarger();
+
+		bst.add(35);
+		bst.add(34);
+
+		// bst.addReturn(90);
+		bst.remove(20);
+		bst.remove(40);
+		bst.remove(60);
+		
 
 		bst.display();
+
 	}
 }

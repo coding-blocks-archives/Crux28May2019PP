@@ -197,7 +197,7 @@ public class BinaryTree {
 	}
 
 	// Ques : https://leetcode.com/problems/diameter-of-binary-tree/
-	
+
 	public int diameter() {
 		return diameter(root);
 	}
@@ -382,7 +382,8 @@ public class BinaryTree {
 		System.out.println();
 	}
 
-	// Ques : https://leetcode.com/problems/smallest-subtree-with-all-the-deepest-nodes/
+	// Ques :
+	// https://leetcode.com/problems/smallest-subtree-with-all-the-deepest-nodes/
 
 	private class DepthPair {
 		int ht = -1;
@@ -467,7 +468,7 @@ public class BinaryTree {
 
 		int sp = leftBranchSum + rightBranchSum + node.data;
 
-		if (sp > ans[0]) {	
+		if (sp > ans[0]) {
 			ans[0] = sp;
 		}
 
@@ -475,7 +476,7 @@ public class BinaryTree {
 	}
 
 	// Ques : https://www.geeksforgeeks.org/find-largest-subtree-sum-tree/
-	
+
 	public int largestSubtreeSum() {
 
 		int[] ans = new int[1];
@@ -502,4 +503,86 @@ public class BinaryTree {
 		return sp;
 
 	}
+
+	private class BSTPair {
+
+		boolean isBST = true;
+		int max = Integer.MIN_VALUE;
+		int min = Integer.MAX_VALUE;
+
+		Node largestBSTNode;
+		int size = 0;
+	}
+
+	public boolean isTreeBST() {
+		return isTreeBST(root).isBST;
+	}
+
+	private BSTPair isTreeBST(Node node) {
+
+		if (node == null) {
+			return new BSTPair();
+		}
+
+		BSTPair lp = isTreeBST(node.left);
+		BSTPair rp = isTreeBST(node.right);
+
+		BSTPair sp = new BSTPair();
+
+		sp.isBST = lp.isBST && rp.isBST && node.data > lp.max && node.data < rp.min;
+
+		sp.max = Math.max(node.data, Math.max(lp.max, rp.max));
+		sp.min = Math.min(node.data, Math.min(lp.min, rp.min));
+
+		return sp;
+
+	}
+
+	public void largestBSTinBT() {
+		BSTPair res = largestBSTinBT(root);
+		System.out.println(res.largestBSTNode.data);
+		System.out.println(res.size);
+	}
+
+	private BSTPair largestBSTinBT(Node node) {
+
+		if(node == null)
+			return new BSTPair() ;
+		
+		BSTPair lp = largestBSTinBT(node.left);
+		BSTPair rp = largestBSTinBT(node.right);
+
+		BSTPair sp = new BSTPair();
+
+		sp.isBST = lp.isBST && rp.isBST && node.data > lp.max && node.data < rp.min;
+
+		sp.max = Math.max(node.data, Math.max(lp.max, rp.max));
+		sp.min = Math.min(node.data, Math.min(lp.min, rp.min));
+
+		if (sp.isBST) {
+			sp.largestBSTNode = node;
+			sp.size = lp.size + rp.size + 1;
+		} else {
+
+			if (lp.size > rp.size) {
+				sp.largestBSTNode = lp.largestBSTNode;
+				sp.size = lp.size;
+			} else {
+				sp.largestBSTNode = rp.largestBSTNode;
+				sp.size = rp.size;
+			}
+
+		}
+
+		return sp;
+
+	}
+
 }
+
+
+
+
+
+
+
