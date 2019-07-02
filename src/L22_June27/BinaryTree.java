@@ -1,5 +1,11 @@
 package L22_June27;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -546,9 +552,9 @@ public class BinaryTree {
 
 	private BSTPair largestBSTinBT(Node node) {
 
-		if(node == null)
-			return new BSTPair() ;
-		
+		if (node == null)
+			return new BSTPair();
+
 		BSTPair lp = largestBSTinBT(node.left);
 		BSTPair rp = largestBSTinBT(node.right);
 
@@ -578,11 +584,66 @@ public class BinaryTree {
 
 	}
 
+	private class VOPair {
+		int data;
+		int vl;
+		int hl;
+
+		@Override
+		public String toString() {
+			return this.data + "";
+		}
+	}
+
+	public void verticalOrder() {
+
+		HashMap<Integer, ArrayList<VOPair>> map = new HashMap<>();
+
+		verticalOrder(root, 0, 0, map);
+
+		ArrayList<Integer> keys = new ArrayList<>(map.keySet());
+
+		Collections.sort(keys); // [-2,-1,0,1,2]
+
+		for (int key : keys) {
+			ArrayList<VOPair> list = map.get(key);
+
+			Collections.sort(list, new VOComparator());
+			System.out.println(key + " -> " + list);
+		}
+
+		// System.out.println(map);
+
+	}
+
+	private class VOComparator implements Comparator<VOPair> {
+
+		@Override
+		public int compare(VOPair o1, VOPair o2) {
+			return o1.hl - o2.hl;
+		}
+
+	}
+
+	private void verticalOrder(Node node, int vLevel, int hLevel, HashMap<Integer, ArrayList<VOPair>> map) {
+
+		if (node == null) {
+			return;
+		}
+
+		if (!map.containsKey(vLevel)) {
+			map.put(vLevel, new ArrayList<>());
+		}
+
+		VOPair np = new VOPair();
+		np.data = node.data;
+		np.hl = hLevel;
+		np.vl = vLevel;
+		map.get(vLevel).add(np);
+
+		verticalOrder(node.left, vLevel - 1, hLevel + 1, map);
+		verticalOrder(node.right, vLevel + 1, hLevel + 1, map);
+
+	}
+
 }
-
-
-
-
-
-
-

@@ -1,5 +1,8 @@
 package L22_June27;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * @author Garima Chhikara
  * @email garima.chhikara@codingblocks.com
@@ -28,8 +31,11 @@ public class BTClient {
 		// int[] in = { 5, 10, 15, 200, 22, 25, 26 };
 		// int[] pre = { 200, 10, 5, 15, 25, 22, 26 };
 
-		int[] in = { 50, 10, 125, 150, 170, 180, 200, 250, 30, 350, 370 };
-		int[] pre = { 200, 10, 50, 150, 125, 170, 180, 30, 250, 350, 370 };
+		// int[] in = { 50, 10, 125, 150, 170, 180, 200, 250, 30, 350, 370 };
+		// int[] pre = { 200, 10, 50, 150, 125, 170, 180, 30, 250, 350, 370 };
+
+		int[] in = { 40, 110, 80, 90, 20, 50, 130, 10, 60, 30, 70 };
+		int[] pre = { 10, 20, 40, 80, 110, 90, 50, 130, 30, 60, 70 };
 		BinaryTree bt = new BinaryTree(pre, in);
 		bt.display();
 
@@ -59,6 +65,38 @@ public class BTClient {
 		// System.out.println(bt.isTreeBST());
 		//
 
-		bt.largestBSTinBT();
+//		bt.largestBSTinBT();
+		
+		bt.verticalOrder();
+		
+		List<Integer> list = fun() ;
 	}
+	
+	public static LinkedList<Integer> fun() {
+		
+		LinkedList<Integer> list = new LinkedList<>() ;
+		
+		list.add(10) ;
+		
+		return list ;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
