@@ -23,7 +23,7 @@ public class RecursionPrint {
 
 		// lexicoCounting(0, 1000);
 
-		partitioning("nitinaa", "");
+		partitioning("abbcbc", "");
 
 	}
 
