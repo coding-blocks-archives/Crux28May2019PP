@@ -13,12 +13,12 @@ public class DP {
 
 	public static void main(String[] args) {
 
-		int n = 200;
+		// int n = 200;
 
 		long start = System.currentTimeMillis();
 
 		// System.out.println(fibonacci(n));
-		int[][] strg = new int[n + 1][n + 1];
+		// int[][] strg = new int[n + 1][n + 1];
 		// System.out.println(fibonacciTD(n, strg));
 		// System.out.println(fibonacciBU(n));
 		// System.out.println(fibonacciBUSE(n));
@@ -26,9 +26,33 @@ public class DP {
 		// System.out.println(boardPathBU(n));
 		// System.out.println(boardpathBUSE(n));
 
-		System.out.println(mazePathTD(0, 0, n, n, strg));
-		System.out.println(mazePathBU(n, n));
-		System.out.println(mazePathBUSE(n, n));
+		// System.out.println(mazePathTD(0, 0, n, n, strg));
+		// System.out.println(mazePathBU(n, n));
+		// System.out.println(mazePathBUSE(n, n));
+
+		String s1 = "saturdayhbcjxdhvjdhkjvhdifvoei";
+		String s2 = "sundaybchjcbdhjdbvhdfb";
+		int[][] strg = new int[s1.length() + 1][s2.length() + 1];
+
+		for (int i = 0; i < strg.length; i++) {
+			for (int j = 0; j < strg[0].length; j++) {
+				strg[i][j] = -1;
+			}
+		}
+
+		// System.out.println(LCSTD(s1, s2, strg)); // 11 // 8 sec
+		// System.out.println(LCSBU(s1, s2));
+		// System.out.println(EditDistanceTD(s1, s2, strg));
+		// System.out.println(EditDistanceBU(s1, s2));
+
+		// int n = 100;
+		// int[] arr = new int[n];
+		// for (int i = 0; i <= arr.length - 1; i++) {
+		// arr[i] = i + 1;
+		// }
+
+		int[] arr = { 4, 5, 3, 21, 9 };
+		System.out.println(MCM(arr, 0, arr.length - 1, new int[arr.length][arr.length]));
 
 		long end = System.currentTimeMillis();
 		System.out.println(end - start);
@@ -239,6 +263,195 @@ public class DP {
 		}
 
 		return strg[0];
+	}
+
+	public static int LCS(String s1, String s2) {
+
+		if (s1.length() == 0 || s2.length() == 0) {
+			return 0;
+		}
+
+		char ch1 = s1.charAt(0);
+		char ch2 = s2.charAt(0);
+
+		String ros1 = s1.substring(1);
+		String ros2 = s2.substring(1);
+
+		int ans;
+		if (ch1 == ch2) {
+			ans = LCS(ros1, ros2) + 1;
+		} else {
+
+			int o1 = LCS(s1, ros2);
+			int o2 = LCS(ros1, s2);
+
+			ans = Math.max(o1, o2);
+		}
+
+		return ans;
+
+	}
+
+	public static int LCSTD(String s1, String s2, int[][] strg) {
+
+		if (s1.length() == 0 || s2.length() == 0) {
+			return 0;
+		}
+
+		if (strg[s1.length()][s2.length()] != -1) {
+			return strg[s1.length()][s2.length()];
+		}
+
+		char ch1 = s1.charAt(0);
+		char ch2 = s2.charAt(0);
+
+		String ros1 = s1.substring(1);
+		String ros2 = s2.substring(1);
+
+		int ans;
+		if (ch1 == ch2) {
+			ans = LCSTD(ros1, ros2, strg) + 1;
+		} else {
+
+			int o1 = LCSTD(s1, ros2, strg);
+			int o2 = LCSTD(ros1, s2, strg);
+
+			ans = Math.max(o1, o2);
+		}
+
+		strg[s1.length()][s2.length()] = ans; // strg
+
+		return ans;
+
+	}
+
+	public static int LCSBU(String s1, String s2) {
+
+		int[][] strg = new int[s1.length() + 1][s2.length() + 1];
+
+		for (int row = s1.length() - 1; row >= 0; row--) {
+
+			for (int col = s2.length() - 1; col >= 0; col--) {
+
+				if (s1.charAt(row) == s2.charAt(col)) {
+					strg[row][col] = strg[row + 1][col + 1] + 1;
+				} else {
+
+					int o1 = strg[row][col + 1];
+					int o2 = strg[row + 1][col];
+
+					strg[row][col] = Math.max(o1, o2);
+				}
+
+			}
+
+		}
+
+		return strg[0][0];
+
+	}
+
+	public static int EditDistanceTD(String s1, String s2, int[][] strg) {
+
+		if (s1.length() == 0 || s2.length() == 0) {
+			return Math.max(s1.length(), s2.length());
+		}
+
+		if (strg[s1.length()][s2.length()] != -1) {
+			return strg[s1.length()][s2.length()];
+		}
+
+		char ch1 = s1.charAt(0);
+		char ch2 = s2.charAt(0);
+
+		String ros1 = s1.substring(1);
+		String ros2 = s2.substring(1);
+
+		int ans = 0;
+		if (ch1 == ch2) {
+			ans = EditDistanceTD(ros1, ros2, strg);
+		} else {
+
+			int i = EditDistanceTD(ros1, s2, strg);
+			int d = EditDistanceTD(s1, ros2, strg);
+			int r = EditDistanceTD(ros1, ros2, strg);
+
+			ans = Math.min(i, Math.min(d, r)) + 1;
+
+		}
+
+		strg[s1.length()][s2.length()] = ans;
+
+		return ans;
+
+	}
+
+	public static int EditDistanceBU(String s1, String s2) {
+
+		int[][] strg = new int[s1.length() + 1][s2.length() + 1];
+
+		for (int row = s1.length(); row >= 0; row--) {
+
+			for (int col = s2.length(); col >= 0; col--) {
+
+				if (row == s1.length()) {
+					strg[row][col] = s2.length() - col; // deletion
+					continue;
+				}
+
+				if (col == s2.length()) {
+					strg[row][col] = s1.length() - row; // insertion
+					continue;
+				}
+
+				if (s1.charAt(row) == s2.charAt(col)) {
+					strg[row][col] = strg[row + 1][col + 1];
+				} else {
+
+					int i = strg[row + 1][col];
+					int d = strg[row][col + 1];
+					int r = strg[row + 1][col + 1];
+
+					strg[row][col] = Math.min(i, Math.min(d, r)) + 1;
+
+				}
+
+			}
+		}
+
+		return strg[0][0];
+
+	}
+
+	public static int MCM(int[] arr, int si, int ei, int[][] strg) {
+
+		if (si + 1 == ei) {
+			return 0;
+		}
+
+		if (strg[si][ei] != 0) {
+			return strg[si][ei];
+		}
+
+		int min = Integer.MAX_VALUE;
+
+		for (int k = si + 1; k <= ei - 1; k++) {
+
+			int lp = MCM(arr, si, k, strg);
+			int rp = MCM(arr, k, ei, strg);
+
+			int sw = arr[si] * arr[k] * arr[ei]; // fp : arr[si]* arr[k] sp : arr[k] * arr[ei]
+
+			int total = lp + rp + sw;
+
+			if (total < min) {
+				min = total;
+			}
+		}
+
+		strg[si][ei] = min;
+
+		return min;
 	}
 
 }
