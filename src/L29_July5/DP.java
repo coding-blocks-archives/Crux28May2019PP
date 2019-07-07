@@ -45,15 +45,30 @@ public class DP {
 		// System.out.println(EditDistanceTD(s1, s2, strg));
 		// System.out.println(EditDistanceBU(s1, s2));
 
-		// int n = 100;
-		// int[] arr = new int[n];
-		// for (int i = 0; i <= arr.length - 1; i++) {
-		// arr[i] = i + 1;
-		// }
+		int n = 100;
+		int[] arr = new int[n];
+		for (int i = 0; i <= arr.length - 1; i++) {
+			arr[i] = i + 1;
+		}
 
-		int[] arr = { 4, 5, 3, 21, 9 };
-		System.out.println(MCM(arr, 0, arr.length - 1, new int[arr.length][arr.length]));
+		// int[] arr = { 4, 5, 3, 21, 9, 70, 89, 12, 3, 4, 5, 6 };
+		// System.out.println(MCM(arr, 0, arr.length - 1, new
+		// int[arr.length][arr.length]));
+		// System.out.println(MCMBU(arr));
 
+		// int[] arr = { 2, 3, 5, 1, 4 };
+		// System.out.println(WineProblem(arr, 0, arr.length - 1, 1));
+		// System.out.println(WineProblemTD(arr, 0, arr.length - 1, new
+		// int[arr.length][arr.length]));
+		// System.out.println(WineProblemBU(arr));
+
+		String src = "baaabajhdgvhcsdgvusegykvueguybbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
+		String pat = "****************dhjgvu**********************************************************************************";
+
+		// System.out.println(WildcardMatching(src, pat));
+		System.out.println(WildcardMatchingTD(src, pat, new int[src.length() + 1][pat.length() + 1]));
+		System.out.println(WildcardMatchingBU(src, pat));
+		
 		long end = System.currentTimeMillis();
 		System.out.println(end - start);
 	}
@@ -452,6 +467,258 @@ public class DP {
 		strg[si][ei] = min;
 
 		return min;
+	}
+
+	public static int MCMBU(int[] arr) {
+
+		int n = arr.length;
+
+		int[][] strg = new int[n][n];
+
+		// work for diagonal
+		for (int slide = 1; slide <= n - 2; slide++) {
+
+			for (int si = 0; si <= n - slide - 2; si++) {
+
+				int ei = si + slide + 1;
+
+				// si, ei reach : use the logic from TD
+
+				int min = Integer.MAX_VALUE;
+
+				for (int k = si + 1; k <= ei - 1; k++) {
+
+					int lp = strg[si][k];
+					int rp = strg[k][ei];
+
+					int sw = arr[si] * arr[k] * arr[ei]; // fp : arr[si]* arr[k] sp : arr[k] * arr[ei]
+
+					int total = lp + rp + sw;
+
+					if (total < min) {
+						min = total;
+					}
+				}
+
+				strg[si][ei] = min;
+
+			}
+
+		}
+
+		return strg[0][n - 1];
+
+	}
+
+	public static int WineProblem(int[] arr, int si, int ei, int yr) {
+
+		if (si == ei) {
+			return arr[si] * yr;
+		}
+
+		int start = WineProblem(arr, si + 1, ei, yr + 1) + arr[si] * yr;
+		int end = WineProblem(arr, si, ei - 1, yr + 1) + arr[ei] * yr;
+
+		int ans = Math.max(start, end);
+
+		return ans;
+
+	}
+
+	public static int WineProblemTD(int[] arr, int si, int ei, int[][] strg) {
+
+		int yr = arr.length - ei + si;
+
+		if (si == ei) {
+			return arr[si] * yr;
+		}
+
+		if (strg[si][ei] != 0) {
+			return strg[si][ei];
+		}
+
+		int start = WineProblemTD(arr, si + 1, ei, strg) + arr[si] * yr;
+		int end = WineProblemTD(arr, si, ei - 1, strg) + arr[ei] * yr;
+
+		int ans = Math.max(start, end);
+
+		strg[si][ei] = ans;
+
+		return ans;
+
+	}
+
+	public static int WineProblemBU(int[] arr) {
+
+		int n = arr.length;
+
+		int[][] strg = new int[n][n];
+
+		for (int slide = 0; slide <= n - 1; slide++) {
+
+			for (int si = 0; si <= n - slide - 1; si++) {
+
+				int ei = si + slide;
+
+				int yr = n - ei + si;
+
+				if (si == ei) {
+					strg[si][ei] = arr[si] * yr;
+				} else {
+
+					int start = strg[si + 1][ei] + arr[si] * yr;
+					int end = strg[si][ei - 1] + arr[ei] * yr;
+
+					int ans = Math.max(start, end);
+
+					strg[si][ei] = ans;
+				}
+			}
+
+		}
+
+		return strg[0][n - 1];
+
+	}
+
+	public static boolean WildcardMatching(String src, String pat) {
+
+		if (src.length() == 0 && pat.length() == 0) {
+			return true;
+		}
+
+		if (src.length() != 0 && pat.length() == 0) {
+			return false;
+		}
+
+		if (src.length() == 0 && pat.length() != 0) {
+
+			for (int i = 0; i < pat.length(); i++) {
+				if (pat.charAt(i) != '*') {
+					return false;
+				}
+			}
+
+			return true;
+
+		}
+
+		char chs = src.charAt(0);
+		char chp = pat.charAt(0);
+
+		String ros = src.substring(1);
+		String rop = pat.substring(1);
+
+		boolean ans;
+		if (chs == chp || chp == '?') {
+			ans = WildcardMatching(ros, rop);
+		} else if (chp == '*') {
+			ans = WildcardMatching(src, rop) || WildcardMatching(ros, pat);
+		} else {
+			ans = false;
+		}
+
+		return ans;
+
+	}
+
+	public static int WildcardMatchingTD(String src, String pat, int[][] strg) {
+
+		if (strg[src.length()][pat.length()] != 0) {
+			return strg[src.length()][pat.length()];
+		}
+
+		if (src.length() == 0 && pat.length() == 0) {
+			return 2;
+		}
+
+		if (src.length() != 0 && pat.length() == 0) {
+			return 1;
+		}
+
+		if (src.length() == 0 && pat.length() != 0) {
+
+			for (int i = 0; i < pat.length(); i++) {
+				if (pat.charAt(i) != '*') {
+					return 1;
+				}
+			}
+
+			return 2;
+
+		}
+
+		char chs = src.charAt(0);
+		char chp = pat.charAt(0);
+
+		String ros = src.substring(1);
+		String rop = pat.substring(1);
+
+		int ans;
+		if (chs == chp || chp == '?') {
+			ans = WildcardMatchingTD(ros, rop, strg);
+		} else if (chp == '*') {
+
+			if (WildcardMatchingTD(src, rop, strg) == 2 || WildcardMatchingTD(ros, pat, strg) == 2)
+				ans = 2;
+			else
+				ans = 1;
+		} else {
+			ans = 1;
+		}
+
+		strg[src.length()][pat.length()] = ans;
+
+		return ans;
+
+	}
+
+	public static boolean WildcardMatchingBU(String src, String pat) {
+
+		boolean[][] strg = new boolean[src.length() + 1][pat.length() + 1];
+
+		for (int r = src.length(); r >= 0; r--) {
+			for (int c = pat.length(); c >= 0; c--) {
+
+				if (r == src.length() && c == pat.length()) {
+					strg[r][c] = true;
+					continue;
+				}
+				if (c == pat.length()) {
+					strg[r][c] = false;
+					continue;
+				}
+
+				if (r == src.length()) {
+
+					if (pat.charAt(c) == '*') {
+						strg[r][c] = strg[r][c + 1];
+					} else {
+						strg[r][c] = false;
+					}
+
+					continue;
+				}
+
+				char chs = src.charAt(r);
+				char chp = pat.charAt(c);
+
+				boolean ans;
+				if (chs == chp || chp == '?') {
+					ans = strg[r + 1][c + 1];
+				} else if (chp == '*') {
+					ans = strg[r][c + 1] || strg[r + 1][c];
+				} else {
+					ans = false;
+				}
+
+				strg[r][c] = ans;
+			}
+
+		}
+
+		return strg[0][0];
+
 	}
 
 }
