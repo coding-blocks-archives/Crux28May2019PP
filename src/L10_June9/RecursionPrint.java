@@ -16,14 +16,14 @@ public class RecursionPrint {
 		// printSS("abc", "");
 		// printKPC("145", "");
 		// permutationNoDuplicates("abac", "");
-		// validParenthesis(3, 0, 0, "");
+		validParenthesis(7, 0, 0, "");
 		// System.out.println(boardPath(0, 10, ""));
 
 		// System.out.println(mazePath(0, 0, 2, 2, ""));
 
 		// lexicoCounting(0, 1000);
 
-		partitioning("abbcbc", "");
+		// partitioning("abbcbc", "");
 
 	}
 
@@ -73,10 +73,12 @@ public class RecursionPrint {
 		}
 	}
 
+	static int c = 0;
+
 	public static void validParenthesis(int n, int open, int close, String ans) {
 
 		if (open == n && close == n) {
-			System.out.println(ans);
+			System.out.println(++c + " " + ans);
 			return;
 		}
 

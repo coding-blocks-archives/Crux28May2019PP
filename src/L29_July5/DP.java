@@ -30,15 +30,15 @@ public class DP {
 		// System.out.println(mazePathBU(n, n));
 		// System.out.println(mazePathBUSE(n, n));
 
-		String s1 = "saturdayhbcjxdhvjdhkjvhdifvoei";
-		String s2 = "sundaybchjcbdhjdbvhdfb";
-		int[][] strg = new int[s1.length() + 1][s2.length() + 1];
-
-		for (int i = 0; i < strg.length; i++) {
-			for (int j = 0; j < strg[0].length; j++) {
-				strg[i][j] = -1;
-			}
-		}
+		// String s1 = "saturdayhbcjxdhvjdhkjvhdifvoei";
+		// String s2 = "sundaybchjcbdhjdbvhdfb";
+		// int[][] strg = new int[s1.length() + 1][s2.length() + 1];
+		//
+		// for (int i = 0; i < strg.length; i++) {
+		// for (int j = 0; j < strg[0].length; j++) {
+		// strg[i][j] = -1;
+		// }
+		// }
 
 		// System.out.println(LCSTD(s1, s2, strg)); // 11 // 8 sec
 		// System.out.println(LCSBU(s1, s2));
@@ -68,9 +68,38 @@ public class DP {
 		// System.out.println(WildcardMatching(src, pat));
 		System.out.println(WildcardMatchingTD(src, pat, new int[src.length() + 1][pat.length() + 1]));
 		System.out.println(WildcardMatchingBU(src, pat));
-		
+
 		long end = System.currentTimeMillis();
-		System.out.println(end - start);
+
+		int[] wt = { 1, 3, 4, 5 };
+		int[] prices = { 1, 4, 5, 7 };
+
+		int cap = 7;
+		int[][] strg = new int[wt.length + 1][cap + 1];
+
+		for (int i = 0; i < strg.length; i++) {
+			Arrays.fill(strg[i], -1);
+		}
+
+		// System.out.println(KnapsackTD(wt, prices, 0, cap, strg));
+		// System.out.println(KnapsackBU(wt, prices, cap));
+
+		int[] p = { 0, 1, 5, 8, 9, 10, 17, 17, 20 };
+		int[] s = new int[p.length];
+		// System.out.println(rodCutTD(p, p.length - 1, s));
+		// System.out.println(rodCutBU(p, p.length - 1));
+
+		// System.out.println(eggDrop(1000, 34, new int[1001][35]));
+		// System.out.println(eggDropBU(1000, 34));
+
+		// for (int i = 1; i <= 10; i++) {
+		// System.out.println(noOfBSTs(100, new int[101]));
+		// }
+		// System.out.println(end - start);
+
+		// System.out.println(catalanNumberBU(100));
+
+		System.out.println(palindromicCuts("abaabbc", 0, 5));
 	}
 
 	// Time : 2^n , Space : n
@@ -718,6 +747,348 @@ public class DP {
 		}
 
 		return strg[0][0];
+
+	}
+
+	public static int KnapsackTD(int[] wt, int[] price, int vidx, int cap, int[][] strg) {
+
+		// if (cap < 0) {
+		// return Integer.MIN_VALUE;
+		// }
+
+		if (vidx == wt.length) {
+			return 0;
+		}
+
+		if (strg[vidx][cap] != -1) {
+			return strg[vidx][cap];
+		}
+
+		int exclude = KnapsackTD(wt, price, vidx + 1, cap, strg);
+
+		int include = 0;
+
+		if (cap >= wt[vidx])
+			include = KnapsackTD(wt, price, vidx + 1, cap - wt[vidx], strg) + price[vidx];
+
+		int ans = Math.max(include, exclude);
+
+		strg[vidx][cap] = ans;
+		return ans;
+	}
+
+	public static int KnapsackBU(int[] wt, int[] price, int cap) {
+
+		int[][] strg = new int[wt.length + 1][cap + 1];
+
+		for (int r = wt.length - 1; r >= 0; r--) {
+
+			for (int c = 1; c <= cap; c++) {
+
+				int exclude = strg[r + 1][c];
+
+				int include = 0;
+
+				if (c >= wt[r])
+					include = price[r] + strg[r + 1][c - wt[r]];
+
+				int ans = Math.max(include, exclude);
+
+				strg[r][c] = ans;
+
+			}
+
+		}
+
+		return strg[0][cap];
+
+	}
+
+	public static int Mixtures(int[] arr, int si, int ei) {
+
+		if (si == ei) {
+			return 0;
+		}
+
+		int min = Integer.MAX_VALUE;
+
+		for (int k = si; k <= ei - 1; k++) {
+
+			int lp = Mixtures(arr, si, k);
+			int rp = Mixtures(arr, k + 1, ei);
+
+			int sw = color(arr, si, k) * color(arr, k + 1, ei);
+
+			int total = lp + rp + sw;
+
+			if (total < min)
+				min = total;
+		}
+
+		return min;
+
+	}
+
+	public static int color(int[] arr, int si, int ei) {
+
+		int sum = 0;
+
+		for (int i = si; i <= ei; i++) {
+			sum += arr[i];
+		}
+
+		return sum % 100;
+
+	}
+
+	public static int rodCutTD(int[] prices, int n, int[] strg) {
+
+		if (strg[n] != 0) {
+			return strg[n];
+		}
+
+		int max = prices[n];
+
+		int left = 1;
+		int right = n - 1;
+
+		while (left <= right) {
+
+			int fp = rodCutTD(prices, left, strg);
+			int sp = rodCutTD(prices, right, strg);
+
+			int total = fp + sp;
+
+			if (total > max) {
+				max = total;
+			}
+
+			left++;
+			right--;
+
+		}
+
+		strg[n] = max;
+
+		return max;
+
+	}
+
+	public static int rodCutBU(int[] prices, int n) {
+
+		int[] strg = new int[prices.length];
+
+		strg[1] = prices[1];
+
+		for (int i = 2; i < strg.length; i++) {
+
+			int max = prices[i];
+
+			int left = 1;
+			int right = i - 1;
+
+			while (left <= right) {
+
+				int fp = strg[left];
+				int sp = strg[right];
+
+				int total = fp + sp;
+
+				if (total > max) {
+					max = total;
+				}
+
+				left++;
+				right--;
+
+			}
+
+			strg[i] = max;
+
+		}
+
+		for (int val : strg)
+			System.out.println(val);
+
+		return strg[n];
+
+	}
+
+	public static int eggDrop(int floors, int eggs, int[][] strg) {
+
+		if (floors == 0 || floors == 1) {
+			return floors;
+		}
+
+		if (eggs == 1) {
+			return floors;
+		}
+
+		if (strg[floors][eggs] != 0) {
+			return strg[floors][eggs];
+		}
+
+		int min = Integer.MAX_VALUE;
+
+		for (int f = 1; f <= floors; f++) {
+
+			int eggBreak = eggDrop(f - 1, eggs - 1, strg);
+			int eggDoesnotBreak = eggDrop(floors - f, eggs, strg);
+
+			int ans = Math.max(eggBreak, eggDoesnotBreak) + 1;
+
+			if (ans < min) {
+				min = ans;
+			}
+
+		}
+
+		strg[floors][eggs] = min;
+
+		return min;
+
+	}
+
+	public static int eggDropBU(int floors, int eggs) {
+
+		int[][] strg = new int[floors + 1][eggs + 1];
+
+		// remaining floors are 1
+		for (int egg = 1; egg < strg[0].length; egg++) {
+			strg[1][egg] = 1;
+		}
+
+		// eggs 1 : drops : floors
+		for (int floor = 1; floor < strg.length; floor++) {
+			strg[floor][1] = floor;
+		}
+
+		// r : floors
+		for (int floor = 2; floor <= floors; floor++) {
+
+			// c : eggs
+			for (int egg = 2; egg <= eggs; egg++) {
+
+				int min = Integer.MAX_VALUE;
+
+				for (int f = 1; f <= floor; f++) {
+
+					int eggBreak = strg[f - 1][egg - 1];
+					int eggDoesnotBreak = strg[floor - f][egg];
+
+					int ans = Math.max(eggBreak, eggDoesnotBreak) + 1;
+
+					if (ans < min) {
+						min = ans;
+					}
+
+				}
+
+				strg[floor][egg] = min;
+
+			}
+
+		}
+
+		return strg[floors][eggs];
+
+	}
+
+	public static int noOfBSTs(int n, int[] strg) {
+
+		if (n <= 1) {
+			return 1;
+		}
+
+		if (strg[n] != 0) {
+			return strg[n];
+		}
+
+		int ans = 0;
+
+		for (int root = 1; root <= n; root++) {
+
+			int bstleft = noOfBSTs(root - 1, strg);
+			int bstright = noOfBSTs(n - root, strg);
+
+			int total = bstleft * bstright;
+
+			ans += total;
+		}
+
+		strg[n] = ans;
+
+		return ans;
+
+	}
+
+	public static int catalanNumberBU(int n) {
+
+		int[] strg = new int[n + 1];
+
+		strg[0] = strg[1] = 1;
+
+		for (int i = 2; i < strg.length; i++) {
+
+			int ans = 0;
+
+			for (int root = 1; root <= i; root++) {
+
+				int bstleft = strg[root - 1];
+				int bstright = strg[i - root];
+
+				int total = bstleft * bstright;
+
+				ans += total;
+			}
+
+			strg[i] = ans;
+
+		}
+
+		return strg[n];
+
+	}
+
+	public static int palindromicCuts(String str, int si, int ei) {
+
+		if (isPalindrome(str, si, ei)) {
+			return 0;
+		}
+
+		int min = Integer.MAX_VALUE;
+
+		for (int k = si; k <= ei - 1; k++) {
+			int lp = palindromicCuts(str, si, k);
+			int rp = palindromicCuts(str, k + 1, ei);
+
+			int ans = lp + rp + 1;
+
+			if (ans < min) {
+				min = ans;
+			}
+
+		}
+
+		return min;
+
+	}
+
+	public static boolean isPalindrome(String str, int si, int ei) {
+
+		int left = si;
+		int right = ei;
+
+		while (left < right) {
+			if (str.charAt(left) != str.charAt(right)) {
+				return false;
+			}
+
+			left++;
+			right--;
+		}
+
+		return true;
 
 	}
 
