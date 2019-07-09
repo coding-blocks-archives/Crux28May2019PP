@@ -52,9 +52,8 @@ public class DP {
 		}
 
 		// int[] arr = { 4, 5, 3, 21, 9, 70, 89, 12, 3, 4, 5, 6 };
-		// System.out.println(MCM(arr, 0, arr.length - 1, new
-		// int[arr.length][arr.length]));
-		// System.out.println(MCMBU(arr));
+		System.out.println(MCMTD(arr, 0, arr.length - 1, new int[arr.length][arr.length]));
+		System.out.println(MCMBU(arr));
 
 		// int[] arr = { 2, 3, 5, 1, 4 };
 		// System.out.println(WineProblem(arr, 0, arr.length - 1, 1));
@@ -89,13 +88,14 @@ public class DP {
 		// System.out.println(rodCutTD(p, p.length - 1, s));
 		// System.out.println(rodCutBU(p, p.length - 1));
 
-		// System.out.println(eggDrop(1000, 34, new int[1001][35]));
+		// System.out.println(eggDropTD(1000, 34, new int[1001][35]));
 		// System.out.println(eggDropBU(1000, 34));
-
+		//
 		// for (int i = 1; i <= 10; i++) {
-		// System.out.println(noOfBSTs(100, new int[101]));
+		// System.out.println(noOfBSTsTD(100, new int[101]));
 		// }
-		// System.out.println(end - start);
+
+		System.out.println(end - start);
 
 		// System.out.println(catalanNumberBU(100));
 
@@ -309,6 +309,8 @@ public class DP {
 		return strg[0];
 	}
 
+	// Q : https://www.geeksforgeeks.org/longest-common-subsequence-dp-4/
+
 	public static int LCS(String s1, String s2) {
 
 		if (s1.length() == 0 || s2.length() == 0) {
@@ -395,6 +397,8 @@ public class DP {
 
 	}
 
+	// Q : https://www.geeksforgeeks.org/edit-distance-dp-5/
+
 	public static int EditDistanceTD(String s1, String s2, int[][] strg) {
 
 		if (s1.length() == 0 || s2.length() == 0) {
@@ -467,7 +471,9 @@ public class DP {
 
 	}
 
-	public static int MCM(int[] arr, int si, int ei, int[][] strg) {
+	// Q : https://www.geeksforgeeks.org/matrix-chain-multiplication-dp-8/
+
+	public static int MCMTD(int[] arr, int si, int ei, int[][] strg) {
 
 		if (si + 1 == ei) {
 			return 0;
@@ -481,8 +487,8 @@ public class DP {
 
 		for (int k = si + 1; k <= ei - 1; k++) {
 
-			int lp = MCM(arr, si, k, strg);
-			int rp = MCM(arr, k, ei, strg);
+			int lp = MCMTD(arr, si, k, strg);
+			int rp = MCMTD(arr, k, ei, strg);
 
 			int sw = arr[si] * arr[k] * arr[ei]; // fp : arr[si]* arr[k] sp : arr[k] * arr[ei]
 
@@ -538,6 +544,9 @@ public class DP {
 		return strg[0][n - 1];
 
 	}
+
+	// Q : https://www.hackerearth.com/practice/notes/dynamic-programming-i-1/
+	// Q : https://www.geeksforgeeks.org/maximum-profit-sale-wines/
 
 	public static int WineProblem(int[] arr, int si, int ei, int yr) {
 
@@ -609,6 +618,8 @@ public class DP {
 		return strg[0][n - 1];
 
 	}
+
+	// Q : https://www.geeksforgeeks.org/wildcard-pattern-matching/
 
 	public static boolean WildcardMatching(String src, String pat) {
 
@@ -750,6 +761,9 @@ public class DP {
 
 	}
 
+	// Q : 0-1 Knapsack : https://www.geeksforgeeks.org/0-1-knapsack-problem-dp-10/
+	// Q : Fractional Knapsack : https://www.geeksforgeeks.org/fractional-knapsack-problem/
+
 	public static int KnapsackTD(int[] wt, int[] price, int vidx, int cap, int[][] strg) {
 
 		// if (cap < 0) {
@@ -804,6 +818,8 @@ public class DP {
 
 	}
 
+	// Q : https://www.spoj.com/problems/MIXTURES/
+
 	public static int Mixtures(int[] arr, int si, int ei) {
 
 		if (si == ei) {
@@ -840,6 +856,8 @@ public class DP {
 		return sum % 100;
 
 	}
+
+	// Q : https://www.geeksforgeeks.org/cutting-a-rod-dp-13/
 
 	public static int rodCutTD(int[] prices, int n, int[] strg) {
 
@@ -914,7 +932,9 @@ public class DP {
 
 	}
 
-	public static int eggDrop(int floors, int eggs, int[][] strg) {
+	// Q : https://www.geeksforgeeks.org/egg-dropping-puzzle-dp-11/
+
+	public static int eggDropTD(int floors, int eggs, int[][] strg) {
 
 		if (floors == 0 || floors == 1) {
 			return floors;
@@ -932,8 +952,8 @@ public class DP {
 
 		for (int f = 1; f <= floors; f++) {
 
-			int eggBreak = eggDrop(f - 1, eggs - 1, strg);
-			int eggDoesnotBreak = eggDrop(floors - f, eggs, strg);
+			int eggBreak = eggDropTD(f - 1, eggs - 1, strg);
+			int eggDoesnotBreak = eggDropTD(floors - f, eggs, strg);
 
 			int ans = Math.max(eggBreak, eggDoesnotBreak) + 1;
 
@@ -958,15 +978,15 @@ public class DP {
 			strg[1][egg] = 1;
 		}
 
-		// eggs 1 : drops : floors
+		// eggs 1 : drops = floors
 		for (int floor = 1; floor < strg.length; floor++) {
 			strg[floor][1] = floor;
 		}
 
-		// r : floors
+		// row : floor
 		for (int floor = 2; floor <= floors; floor++) {
 
-			// c : eggs
+			// col : egg
 			for (int egg = 2; egg <= eggs; egg++) {
 
 				int min = Integer.MAX_VALUE;
@@ -994,7 +1014,10 @@ public class DP {
 
 	}
 
-	public static int noOfBSTs(int n, int[] strg) {
+	// Q : https://leetcode.com/problems/unique-binary-search-trees/
+	// Significance catalan no : https://en.wikipedia.org/wiki/Catalan_number
+
+	public static int noOfBSTsTD(int n, int[] strg) {
 
 		if (n <= 1) {
 			return 1;
@@ -1008,8 +1031,8 @@ public class DP {
 
 		for (int root = 1; root <= n; root++) {
 
-			int bstleft = noOfBSTs(root - 1, strg);
-			int bstright = noOfBSTs(n - root, strg);
+			int bstleft = noOfBSTsTD(root - 1, strg);
+			int bstright = noOfBSTsTD(n - root, strg);
 
 			int total = bstleft * bstright;
 
@@ -1049,6 +1072,8 @@ public class DP {
 		return strg[n];
 
 	}
+
+	// Q : https://leetcode.com/problems/palindrome-partitioning-ii/
 
 	public static int palindromicCuts(String str, int si, int ei) {
 
