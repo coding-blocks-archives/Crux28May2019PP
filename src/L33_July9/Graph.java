@@ -1,9 +1,11 @@
 package L33_July9;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
 import L16_June20.OOPS_Story2.P;
+import L28_July4.HeapGeneric;
 
 /**
  * @author Garima Chhikara
@@ -170,6 +172,8 @@ public class Graph {
 	private class Pair {
 		String vname;
 		String psf;
+
+		String color;
 	}
 
 	public boolean bfs(String src, String dst) {
@@ -381,6 +385,319 @@ public class Graph {
 			}
 
 		}
+
+	}
+
+	public boolean isCyclic() {
+
+		HashMap<String, Boolean> processed = new HashMap<>();
+
+		LinkedList<Pair> queue = new LinkedList<>();
+
+		for (String key : vtces.keySet()) {
+
+			if (processed.containsKey(key)) {
+				continue;
+			}
+
+			// make the pair of src and put in queue
+			Pair sp = new Pair();
+			sp.vname = key;
+			sp.psf = key;
+
+			queue.addLast(sp);
+
+			// work till queue is not empty
+			while (!queue.isEmpty()) {
+
+				// remove the pair from queue
+				Pair rp = queue.removeFirst();
+
+				// ignore the second C
+				if (processed.containsKey(rp.vname)) {
+					return true;
+				}
+
+				// processed
+				processed.put(rp.vname, true);
+
+				// nbrs
+				for (String nbr : vtces.get(rp.vname).nbrs.keySet()) {
+
+					// work only for unprocessed nbrs
+					if (!processed.containsKey(nbr)) {
+						Pair np = new Pair();
+						np.vname = nbr;
+						np.psf = rp.psf + nbr;
+
+						queue.addLast(np);
+					}
+				}
+
+			}
+
+		}
+
+		return false;
+
+	}
+
+	public boolean isConnected() {
+
+		int count = 0;
+
+		HashMap<String, Boolean> processed = new HashMap<>();
+
+		LinkedList<Pair> queue = new LinkedList<>();
+
+		for (String key : vtces.keySet()) {
+
+			if (processed.containsKey(key)) {
+				continue;
+			}
+
+			count++;
+
+			// make the pair of src and put in queue
+			Pair sp = new Pair();
+			sp.vname = key;
+			sp.psf = key;
+
+			queue.addLast(sp);
+
+			// work till queue is not empty
+			while (!queue.isEmpty()) {
+
+				// remove the pair from queue
+				Pair rp = queue.removeFirst();
+
+				// ignore the second C
+				if (processed.containsKey(rp.vname)) {
+					continue;
+				}
+
+				// processed
+				processed.put(rp.vname, true);
+
+				// nbrs
+				for (String nbr : vtces.get(rp.vname).nbrs.keySet()) {
+
+					// work only for unprocessed nbrs
+					if (!processed.containsKey(nbr)) {
+						Pair np = new Pair();
+						np.vname = nbr;
+						np.psf = rp.psf + nbr;
+
+						queue.addLast(np);
+					}
+				}
+
+			}
+
+		}
+
+		return count == 1;
+
+	}
+
+	public boolean isTree() {
+		return !isCyclic() && isConnected();
+	}
+
+	public ArrayList<ArrayList<String>> getCC() {
+
+		ArrayList<ArrayList<String>> ans = new ArrayList<>();
+
+		HashMap<String, Boolean> processed = new HashMap<>();
+
+		LinkedList<Pair> queue = new LinkedList<>();
+
+		for (String key : vtces.keySet()) {
+
+			if (processed.containsKey(key)) {
+				continue;
+			}
+
+			ArrayList<String> subans = new ArrayList<>();
+
+			// make the pair of src and put in queue
+			Pair sp = new Pair();
+			sp.vname = key;
+			sp.psf = key;
+
+			queue.addLast(sp);
+
+			// work till queue is not empty
+			while (!queue.isEmpty()) {
+
+				// remove the pair from queue
+				Pair rp = queue.removeFirst();
+
+				// ignore the second C
+				if (processed.containsKey(rp.vname)) {
+					continue;
+				}
+
+				subans.add(rp.vname);
+
+				// processed
+				processed.put(rp.vname, true);
+
+				// nbrs
+				for (String nbr : vtces.get(rp.vname).nbrs.keySet()) {
+
+					// work only for unprocessed nbrs
+					if (!processed.containsKey(nbr)) {
+						Pair np = new Pair();
+						np.vname = nbr;
+						np.psf = rp.psf + nbr;
+
+						queue.addLast(np);
+					}
+				}
+
+			}
+
+			ans.add(subans);
+
+		}
+		return ans;
+
+	}
+
+	public boolean isBipartite() {
+
+		HashMap<String, String> processed = new HashMap<>();
+
+		LinkedList<Pair> queue = new LinkedList<>();
+
+		for (String key : vtces.keySet()) {
+
+			if (processed.containsKey(key)) {
+				continue;
+			}
+
+			// make the pair of src and put in queue
+			Pair sp = new Pair();
+			sp.vname = key;
+			sp.psf = key;
+			sp.color = "r";
+
+			queue.addLast(sp);
+
+			// work till queue is not empty
+			while (!queue.isEmpty()) {
+
+				// remove the pair from queue
+				Pair rp = queue.removeFirst();
+
+				// ignore the second C
+				if (processed.containsKey(rp.vname)) {
+
+					String oc = processed.get(rp.vname);
+					String nc = rp.color;
+
+					if (!oc.equals(nc)) {
+						return false;
+					}
+
+					continue;
+				}
+
+				// processed
+				processed.put(rp.vname, rp.color);
+
+				// nbrs
+				for (String nbr : vtces.get(rp.vname).nbrs.keySet()) {
+
+					// work only for unprocessed nbrs
+					if (!processed.containsKey(nbr)) {
+						Pair np = new Pair();
+						np.vname = nbr;
+						np.psf = rp.psf + nbr;
+						np.color = rp.color.equals("r") ? "g" : "r";
+						queue.addLast(np);
+					}
+				}
+
+			}
+
+		}
+
+		return true;
+
+	}
+
+	private class PrimsPair implements Comparable<PrimsPair> {
+		String vname;
+		String acqvname;
+		int cost = Integer.MAX_VALUE;
+
+		@Override
+		public int compareTo(PrimsPair o) {
+			return o.cost - this.cost;
+		}
+	}
+
+	public Graph prims() {
+
+		Graph mst = new Graph();
+
+		HeapGeneric<PrimsPair> heap = new HeapGeneric<>();
+
+		HashMap<String, PrimsPair> map = new HashMap<>();
+
+		// make the starting pairs and put in heap and map
+		for (String key : vtces.keySet()) {
+			PrimsPair sp = new PrimsPair();
+			sp.vname = key;
+
+			heap.add(sp);
+			map.put(key, sp);
+		}
+
+		// work till heap is not empty
+		while (!heap.isEmpty()) {
+
+			// remove the pair from heap and map
+			PrimsPair rp = heap.remove();
+			map.remove(rp.vname);
+
+			// add in mst
+			if (rp.acqvname == null) {
+				mst.addVertex(rp.vname);
+			} else {
+				mst.addVertex(rp.vname);
+				mst.addEdge(rp.vname, rp.acqvname, rp.cost);
+			}
+
+			// work for nbrs
+			for (String nbr : vtces.get(rp.vname).nbrs.keySet()) {
+
+				// update only those nbrs which are present in heap
+				if (map.containsKey(nbr)) {
+
+					PrimsPair nbrpair = map.get(nbr);
+
+					int oc = nbrpair.cost;
+					int nc = vtces.get(rp.vname).nbrs.get(nbr);
+
+					// if nc < oc then update the nbr pair
+					if (nc < oc) {
+						nbrpair.cost = nc;
+						nbrpair.acqvname = rp.vname;
+
+						heap.updatePriority(nbrpair);
+
+					}
+
+				}
+
+			}
+
+		}
+
+		return mst;
 
 	}
 

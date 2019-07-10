@@ -87,4 +87,19 @@ public class HeapGeneric<T extends Comparable<T>> {
 		return size() == 0;
 	}
 
+	public void updatePriority(T item) {
+
+		int idx = 0;
+
+		for (int i = 0; i < data.size(); i++) {
+			if (data.get(i) == item) {
+				idx = i;
+				break;
+			}
+		}
+
+		upheapify(idx);
+
+	}
+
 }
